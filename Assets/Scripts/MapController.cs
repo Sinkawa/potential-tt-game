@@ -9,9 +9,12 @@ public class MapController : MonoBehaviour
     //Generator parameters
     [SerializeField] private int Width;
     [SerializeField] private int Length;
-    
+    [SerializeField] private float Scale;
+    [SerializeField] private float Threshold;
+    [SerializeField] private float Threshold2;
     //Dev parameters
-    public Tile prefabTile;
+    public RuleTile prefabTile;
+    public RuleTile prefabTreesTile;
     
     //Service parameters
     private Tilemap map;
@@ -21,8 +24,27 @@ public class MapController : MonoBehaviour
     {
         this.map = GetComponent<Tilemap>();
         this.mainCamera = Camera.main;
+        
 
-        map.BoxFill(new Vector3Int(0, 0, 0), prefabTile, 0, 0, Length, Width);
+
+        GenerateMap();
+    }
+
+    void GenerateMap()
+    {
+        for (int x = 0; x < Length; x++) 
+        {
+            for (int y = 0; y < Width; y++) 
+            {
+                float BerlinNoise = Mathf.PerlinNoise(x*Scale, y*Scale);
+                Debug.Log($"For coordinates {x}/{y} BerlinNoise equals {BerlinNoise}");
+                if (BerlinNoise > Threshold) {
+                    int positionZ = (int) Mathf.Round(BerlinNoise * 10);
+                    this.map.SetTile(new Vector3Int(x, y, positionZ), this.prefabTile);
+                    
+                }
+            }
+        }
     }
 
     // Update is called once per frame

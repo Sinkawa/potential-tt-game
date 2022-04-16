@@ -113,14 +113,39 @@ namespace MathIntLib
             else if (value > max) return max;
             else return Round(value);
         }
+        
+        public static int GCD(int m, int n)
+        {
+            int gcd = 0;
+            for (int i = 1; i < (n * m + 1); i++)
+            {
+                if (m % i == 0 && n % i == 0)
+                {
+                    gcd = i;
+                }
+            }
+            return gcd;
+        }
+        
     }
 
     public static class RandomInt 
     {
-        public static int Range(int minInclusive, int maxInclusive)
+        public static int Range(int minInclusive, int maxInclusive, float coefficient = 1)
+        {
+            float rawValue = Random.Range(minInclusive, maxInclusive);
+            return MathInt.Round(rawValue * coefficient);
+        }
+        public static int Range(float minInclusive, float maxInclusive, float coefficient = 1)
+        {
+            float rawValue = Random.Range(minInclusive, maxInclusive);
+            return MathInt.Round(rawValue * coefficient);
+        }
+        public static int Range(double minInclusive, double maxInclusive, float coefficient = 1)
         {
             float rawValue = Random.Range((float) minInclusive, (float) maxInclusive);
-            return (int) Mathf.Round(rawValue);
+            return MathInt.Round(rawValue * coefficient);
         }
+
     }
 };

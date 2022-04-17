@@ -309,7 +309,7 @@ class floatHeightMapHandler
         return ref this.map;
     }
 
-    public ref float[,] Square(RectangleInt rectangle, HeightLimits heightLimits, float coefficient)
+    public ref float[,] Square(RectangleInt rectangle, HeightLimits heightLimits, float coefficient, int sizeThreshold)
     {
         var centerCoordinates = rectangle.GetCenterCoordinates();
         if (this.calculated[centerCoordinates.x + offset, centerCoordinates.y + offset])
@@ -320,7 +320,10 @@ class floatHeightMapHandler
         var verticleValues = this.GetVerticlesValues(rectangle.GetVerticlesCoordinates());
 
         var average = MathInt.Sum(verticleValues) / verticleValues.Count;
-        var displacement = Displace(centerCoordinates, heightLimits, coefficient);
+
+        var displacement = 0f;
+        if (rectangle.GetSize() > sizeThreshold)
+            displacement = Displace(centerCoordinates, heightLimits, coefficient);
         
         SetVerticleValue(centerCoordinates, average + displacement);
 
@@ -346,7 +349,7 @@ class floatHeightMapHandler
         return Displace;
     }
     
-    public ref float[,] Diamond(RectangleInt rectangle, HeightLimits heightLimits, float coefficient)
+    public ref float[,] Diamond(RectangleInt rectangle, HeightLimits heightLimits, float coefficient, int sizeThreshold)
     {
         var centerCoordinates = rectangle.GetCenterCoordinates();
         if (this.calculated[centerCoordinates.x + offset, centerCoordinates.y + offset])
@@ -357,7 +360,9 @@ class floatHeightMapHandler
         var verticleValues = this.GetVerticlesValues(rectangle.GetDiamondCoordinates());
 
         var average = MathInt.Sum(verticleValues) / verticleValues.Count;
-        var displacement = Displace(centerCoordinates, heightLimits, coefficient);
+        var displacement = 0f;
+        if (rectangle.GetSize() > sizeThreshold)
+            displacement = Displace(centerCoordinates, heightLimits, coefficient);
         
         SetVerticleValue(centerCoordinates, average + displacement);
         return ref this.map;
@@ -375,8 +380,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
-        HeightMap = new floatHeightMapHandler();
-        HeightMap.offset = parameters.Offset;
+        
     }
 
     private void RandomizeBorderTypes()
@@ -393,6 +397,8 @@ public class MapGenerator : MonoBehaviour
 
     public void Generate()
     {
+        HeightMap = new floatHeightMapHandler();
+        HeightMap.offset = parameters.Offset;
         HeightMap.Clear();
         HeightMap.Initialize(parameters.MapLimits, parameters.BorderTypes, parameters.HeightLimits);
 
@@ -474,7 +480,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     SquareInt square = new SquareInt(currentX, currentY, currentSize);
 
-                    HeightMap.Square(square, heightLimits, parameters.Coefficient);
+                    HeightMap.Square(square, heightLimits, coefficient, parameters.SizeThreshold);
                 }
             }
            
@@ -487,7 +493,7 @@ public class MapGenerator : MonoBehaviour
                     foreach (var verticleCoordinates in square.GetDiamondCoordinates())
                     {
                         SquareInt currentSquare = new SquareInt(verticleCoordinates, currentSize);
-                        HeightMap.Diamond(currentSquare, heightLimits, coefficient);
+                        HeightMap.Diamond(currentSquare, heightLimits, coefficient, parameters.SizeThreshold);
                     }
                 }
             }

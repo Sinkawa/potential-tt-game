@@ -542,17 +542,18 @@ MonoBehaviour:
     HeightLimits:
       Minimal: -3
       SeaLevel: -1
-      Maximal: 7
-    MapLimits: {x: 512, y: 512}
+      Maximal: 3
+    MapLimits: {x: 128, y: 128}
     BorderTypes:
       SouthWest: 1
       NorthWest: 1
-      NorthEast: 1
+      NorthEast: 0
       SouthEast: 1
-    Coefficient: 2
+    Coefficient: 16
     PostProcessCoefficient: 0
     Offset: 1
     EnablePostProcess: 1
+    SizeThreshold: 8
 --- !u!1 &1830417923
 GameObject:
   m_ObjectHideFlags: 0

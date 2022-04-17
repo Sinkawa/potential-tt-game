@@ -57,6 +57,11 @@ namespace AdditionalClassesInt
             return verticles;        
         }
 
+        public int GetSize()
+        {
+            return this.R.x - this.L.x;
+        }
+
         public Vector2Int GetCenterCoordinates()
         {
             int xCoordinate = MathInt.Average(this.BL.x+this.TR.x, 2);
@@ -103,5 +108,6 @@ namespace AdditionalDataStructures
         public float PostProcessCoefficient = 1;
         public int Offset = 1;
         public bool EnablePostProcess = true;
+        public int SizeThreshold = 1;
     }
 }
